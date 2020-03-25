@@ -16,6 +16,18 @@ import UIKit
 @IBDesignable
 open class TagListView: UIView {
     
+     @IBInspectable open dynamic var numberOfRows: Int = 0 {
+        didSet {
+            self.maximumRow = numberOfRows
+        }
+     }
+
+    private(set) var maximumRow = 0 {
+        didSet {
+            invalidateIntrinsicContentSize()
+        }
+    }
+    
     @IBInspectable open dynamic var textColor: UIColor = .white {
         didSet {
             tagViews.forEach {
@@ -269,6 +281,8 @@ open class TagListView: UIView {
             tagViewHeight = tagView.frame.height
             
             if currentRowTagCount == 0 || currentRowWidth + tagView.frame.width > frameWidth {
+                guard maximumRow == 0 || currentRow < maximumRow else { return }
+                
                 currentRow += 1
                 currentRowWidth = 0
                 currentRowTagCount = 0
